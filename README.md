@@ -69,6 +69,8 @@ You will need to run your favorite `npm` (I am using npm v15.8.0) tool in order 
 
 The website requires no external access beyond the original npm download, all the data is local .json files.  
 
+See [docs/RUNNING.md](docs/RUNNING.md) for details on running the dev server (including newer Node versions) and troubleshooting.
+
 ## Roadmap
 
 - [x] Reading list tracking
