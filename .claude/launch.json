@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "warmap",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "--openssl-legacy-provider",
+        "node_modules/@vue/cli-service/bin/vue-cli-service.js",
+        "serve",
+        "--port",
+        "8080"
+      ],
+      "port": 8080
+    }
+  ]
+}
