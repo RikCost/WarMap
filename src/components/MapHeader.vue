@@ -55,6 +55,14 @@
           {{ showingSummaries ? "Hide" : "Show" }} Fighter Roster
         </div>
       </div>
+      <div class="control_group archive_links">
+        <router-link class="wide_button half" to="/stories"
+          >Character Stories</router-link
+        >
+        <router-link class="wide_button half" to="/items"
+          >Item Tracker</router-link
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -85,7 +93,7 @@ export default {
   name: "MapHeader",
   data: function() {
     return {
-      slider_round: 0
+      slider_round: this.$store.getters.round
     }
   },
   components: {
@@ -120,6 +128,12 @@ export default {
     }),
     enableRosterButton: function() {
       return this.curRound !== 0
+    }
+  },
+  watch: {
+    //the round can also change from outside (links from the archive pages)
+    curRound: function(val) {
+      this.slider_round = val
     }
   },
   mounted() {}
@@ -157,6 +171,22 @@ h1 {
   -ms-user-select: none;
 
   cursor: pointer;
+}
+
+.archive_links {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.4em;
+}
+
+.wide_button.half {
+  width: 48%;
+  margin-left: 0;
+  margin-right: 0;
+  color: inherit;
+  text-decoration: none;
+  font-size: 0.85em;
 }
 
 .wide_button.disabled {

@@ -11,6 +11,11 @@
       <div class="detail_row">
         <h3>{{ this.faction.toUpperCase() }}</h3>
       </div>
+      <div class="detail_row storyLink">
+        <router-link :to="storyLink"
+          >Read {{ fighterName }}'s story</router-link
+        >
+      </div>
       <div
         class="allArtists"
         v-for="artist in Object.values(this.fighter.artists)"
@@ -94,6 +99,7 @@ import {
 } from "../../state/getters"
 import { buildTwitterLink, buildInstagramLink } from "../../common/links"
 import ProfilePic from "../elements/ProfilePic.vue"
+import { storyRoute } from "../../common/navigation"
 
 export default {
   props: {
@@ -144,6 +150,9 @@ export default {
     fighterIcon: function() {
       return `fighterimages/${this.fighter.id}.png`
     },
+    storyLink: function() {
+      return storyRoute(this.fighter.id)
+    },
     fighterBackupIcon: function() {
       if (this.faction === "pyre")
         return require("../../assets/pics/pyre-standin.png")
@@ -181,6 +190,15 @@ export default {
   padding-bottom: 0.4vh;
   margin-bottom: 0.3vh;
   font-size: 0.7em;
+}
+
+.storyLink {
+  margin-bottom: 0.4em;
+}
+
+.storyLink a {
+  color: #ffd27a;
+  font-weight: bold;
 }
 
 .deets {

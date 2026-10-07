@@ -183,6 +183,9 @@ export default {
     })
   },
   mounted: function() {
+    //already set up, we are coming back from another page
+    if (this.$store.state.localStorageAvailable !== null) return
+
     //check availability of LS
     const available = storageAvailable("localStorage")
     if (!available) {
@@ -209,7 +212,6 @@ export default {
   },
   beforeMount: function() {
     extractAndProcessParams(this)
-    this.slider_round = this.curRound
   },
   created: function() {
     window.addEventListener("resize", () => {

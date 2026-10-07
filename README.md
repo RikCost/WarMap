@@ -74,9 +74,9 @@ The website requires no external access beyond the original npm download, all th
 - [x] Reading list tracking
 - [x] Rule lookup
 - [x] Round reading list
-- [ ] Battle item tracking
+- [x] Battle item tracking
 - [x] Mobile support
-- [ ] Character stories
+- [x] Character stories
 
 ## Other Things
 

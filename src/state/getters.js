@@ -19,6 +19,57 @@ const isMiniClash = function(tile) {
   return tile.miniclash
 }
 
+const otherFaction = function(faction) {
+  return faction === "pyre" ? "bastion" : "pyre"
+}
+
+const battleKind = function(tile) {
+  if (tile.grandBattle) return "grandBattle"
+  if (isClash(tile)) return "clash"
+  if (isMiniClash(tile)) return "miniclash"
+  if (tile.contest) return "duel"
+  return "other"
+}
+
+//all the tiles (but not the round metadata) of a round
+const roundTiles = function(state, round) {
+  return Object.values(state.roundData[round]).filter(t => "fighters" in t)
+}
+
+const zoneNameForTile = function(state, tile) {
+  if (tile.gbZone) return tile.gbZone
+  var meta = state.metaMap[tile.location]
+  if (!meta || !(meta.zone in state.zoneDesc)) return ""
+  return state.zoneDesc[meta.zone].name
+}
+
+//clashes span multiple tiles that list the same fighters, so they get merged
+const summarizeBattle = function(state, round, tiles) {
+  var first = tiles[0]
+  return {
+    round: round,
+    locations: tiles.map(t => t.location),
+    kind: battleKind(first),
+    zoneName: zoneNameForTile(state, first),
+    attacker: first.attacker,
+    fighters: first.fighters,
+    outcome: first.outcome || {},
+    note: first.note || first.notes || "",
+    items: tiles.reduce(
+      (all, t) => all.concat((t.items || []).filter(i => !all.includes(i))),
+      []
+    ),
+    events: first.events || []
+  }
+}
+
+const sameFighters = function(t1, t2) {
+  return (
+    JSON.stringify(t1.fighters.pyre) === JSON.stringify(t2.fighters.pyre) &&
+    JSON.stringify(t1.fighters.bastion) === JSON.stringify(t2.fighters.bastion)
+  )
+}
+
 const getters = {
   selecting: state => state.curSelected,
   round: state => state.curRound,
@@ -127,6 +178,77 @@ const getters = {
     if (!(`${fighterId}` in state.backstories)) return "No Backstory Registered"
     return state.backstories[fighterId]
   },
+  fighterStory: state => fighterId => {
+    var fighter = state.allFighters[fighterId]
+    if (!fighter) return []
+
+    return fighter.rounds.map((round, index) => {
+      var faction = fighter.faction[index]
+      var tiles =
+        round < state.roundData.length
+          ? roundTiles(state, round).filter(t =>
+              (t.fighters[faction] || []).includes(fighter.id)
+            )
+          : []
+      var battle =
+        tiles.length > 0 ? summarizeBattle(state, round, tiles) : null
+      var enemy = otherFaction(faction)
+
+      return {
+        round: round,
+        link: fighter.link[index] || "na",
+        context: fighter.context[index],
+        faction: faction,
+        battle: battle,
+        allies: battle
+          ? battle.fighters[faction].filter(id => id !== fighter.id)
+          : [],
+        opponents: battle ? battle.fighters[enemy] : [],
+        outcome: battle ? battle.outcome[faction] || "" : "",
+        attacking: battle ? battle.attacker === faction : false
+      }
+    })
+  },
+  storyFighterList: state => {
+    return Object.values(state.allFighters)
+      .filter(f => f && f.rounds && f.rounds.length > 0)
+      .sort(alpahbeticalSort)
+      .map(f => {
+        return {
+          id: f.id,
+          name: f.name,
+          rounds: f.rounds.length,
+          faction: f.faction[f.faction.length - 1]
+        }
+      })
+  },
+  itemInfo: state => itemId => {
+    return state.items[itemId]
+  },
+  allItemIds: state => {
+    return Object.keys(state.items).map(i => parseInt(i))
+  },
+  itemHistory: state => itemId => {
+    var history = []
+    state.roundData.forEach((roundData, round) => {
+      var tiles = roundTiles(state, round).filter(t =>
+        (t.items || []).includes(itemId)
+      )
+      //group tiles of the same battle (clashes take up more than one tile)
+      var groups = []
+      tiles.forEach(t => {
+        var group = groups.find(g => sameFighters(g[0], t))
+        if (group) group.push(t)
+        else groups.push([t])
+      })
+      groups.forEach(g => history.push(summarizeBattle(state, round, g)))
+    })
+    return history
+  },
+  itemLastSeen: (state, getters) => (itemId, round) => {
+    var seen = getters.itemHistory(itemId).filter(b => b.round <= round)
+    return seen.length > 0 ? seen[seen.length - 1] : null
+  },
   showItems: state => {
     return state.showItems
   },
@@ -200,6 +322,12 @@ const TILE_IS_CLASH = "tileIsClash"
 const TILE_IS_MINICLASH = "tileIsMiniClash"
 const FIGHTER_BACKSTORY = "fighterBackstory"
 const ALL_FIGHTERS_IN_ROUND = "getAllFightersThisRoundForFaction"
+const FIGHTER_STORY = "fighterStory"
+const STORY_FIGHTER_LIST = "storyFighterList"
+const ITEM_INFO = "itemInfo"
+const ALL_ITEM_IDS = "allItemIds"
+const ITEM_HISTORY = "itemHistory"
+const ITEM_LAST_SEEN = "itemLastSeen"
 
 const OPT_SHOW_GRAPHICS = "showGraphics"
 const OPT_SHOW_ITEMS = "showItems"
@@ -236,5 +364,11 @@ export {
   OPT_SHOW_LABELS,
   ALL_FIGHTERS_IN_ROUND,
   OPT_SHOW_SUMMARIES,
-  TILE_IS_MINICLASH
+  TILE_IS_MINICLASH,
+  FIGHTER_STORY,
+  STORY_FIGHTER_LIST,
+  ITEM_INFO,
+  ALL_ITEM_IDS,
+  ITEM_HISTORY,
+  ITEM_LAST_SEEN
 }

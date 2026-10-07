@@ -1,3 +1,4 @@
+import Vue from "vue"
 import { getKey, initializeKey, setKey } from "../common/localStorage"
 
 const mutations = {
@@ -61,10 +62,12 @@ const mutations = {
   },
   markAsRead(state, input) {
     if (!(`${input.fighterId}` in state.readingList)) {
-      state.readingList[input.fighterId] = []
+      //Vue.set so anything counting read comics notices the new fighter
+      Vue.set(state.readingList, input.fighterId, [])
     }
 
-    state.readingList[input.fighterId].push(input.round)
+    if (!state.readingList[input.fighterId].includes(input.round))
+      state.readingList[input.fighterId].push(input.round)
 
     if (state.localStorageAvailable) {
       setKey("readingList", state.readingList)
@@ -74,6 +77,10 @@ const mutations = {
     if (`${input.fighterId}` in state.readingList) {
       var index = state.readingList[input.fighterId].indexOf(input.round)
       if (index !== -1) state.readingList[input.fighterId].splice(index, 1)
+    }
+
+    if (state.localStorageAvailable) {
+      setKey("readingList", state.readingList)
     }
   },
   toggleSummaryPane(state) {

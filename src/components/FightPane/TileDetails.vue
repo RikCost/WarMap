@@ -13,6 +13,16 @@
           <div class="RuleTitle">{{ entry.name }}</div>
           {{ entry.rule }}
         </div>
+        <div class="ItemText" v-for="item in tileItems" :key="item.id">
+          <img :src="`items/${item.id}.png`" class="ItemIcon" alt="" />
+          <div>
+            <div class="RuleTitle">{{ item.name }}</div>
+            <div class="ItemDescription">{{ item.description }}</div>
+            <router-link class="ItemTrack" :to="item.route"
+              >Track this item</router-link
+            >
+          </div>
+        </div>
         {{ zoneDesc }}
       </div>
     </div>
@@ -25,8 +35,11 @@ import {
   CURRENT_ZONE_NAME,
   CURRENT_ZONE_DESC,
   SELECTING_GETTER,
-  CURRENT_ZONE_FIGHT
+  CURRENT_ZONE_FIGHT,
+  CURRENT_ZONE_ITEMS,
+  ITEM_INFO
 } from "../../state/getters"
+import { itemRoute } from "../../common/navigation"
 
 import specials from "../../assets/data/events.json"
 
@@ -47,11 +60,20 @@ export default {
       }
       return ruleset
     },
+    tileItems: function() {
+      return this.zoneItems(this.selected)
+        .filter(id => this.itemInfo(id))
+        .map(id => {
+          return { id, ...this.itemInfo(id), route: itemRoute(id) }
+        })
+    },
     ...mapGetters({
       currZone: CURRENT_ZONE_NAME,
       currZoneDesc: CURRENT_ZONE_DESC,
       zoneFight: CURRENT_ZONE_FIGHT,
-      selected: SELECTING_GETTER
+      selected: SELECTING_GETTER,
+      zoneItems: CURRENT_ZONE_ITEMS,
+      itemInfo: ITEM_INFO
     })
   },
   name: "TileDetails"
@@ -83,6 +105,40 @@ export default {
   border-bottom-style: solid;
   padding-top: 0.6em;
   padding-bottom: 0.6em;
+}
+
+.ItemText {
+  display: flex;
+  flex-direction: row;
+  gap: 0.6em;
+  text-align: left;
+  margin: 0.6em;
+  padding-bottom: 0.6em;
+  border-bottom-style: solid;
+}
+
+.ItemIcon {
+  width: 3.5em;
+  height: 3.5em;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.ItemText .RuleTitle {
+  font-size: 1.3em;
+  padding-bottom: 0.2em;
+}
+
+.ItemDescription {
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+.ItemTrack {
+  display: inline-block;
+  margin-top: 0.3em;
+  color: #ffd27a;
+  font-weight: bold;
 }
 
 .RuleTitle {

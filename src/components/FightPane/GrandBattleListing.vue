@@ -15,7 +15,7 @@
         />
       </div>
       <div class="fightername">
-        {{ fighterName }}
+        <FighterLink :fighterId="fighterId" />
       </div>
       <div class="fightername" v-show="!hideLink">
         <StrikeLink
@@ -34,6 +34,7 @@ import { FIGHTER_GETTER } from "../../state/getters"
 import ProfilePic from "../elements/ProfilePic.vue"
 
 import StrikeLink from "../elements/StrikeLink.vue"
+import FighterLink from "../elements/FighterLink.vue"
 
 export default {
   props: {
@@ -44,7 +45,8 @@ export default {
   },
   components: {
     StrikeLink,
-    ProfilePic
+    ProfilePic,
+    FighterLink
   },
   computed: {
     fighterComic: function() {

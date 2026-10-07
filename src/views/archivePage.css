@@ -1,0 +1,161 @@
+/* shared look for the full-page archive views (stories, items) */
+
+.archivePage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding: 0 16px 2em 16px;
+
+  background-color: #3e112b;
+  color: #f2a91d;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  text-align: left;
+}
+
+.archivePage *,
+.archivePage *::before,
+.archivePage *::after {
+  box-sizing: border-box;
+}
+
+.archiveHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em 1em;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.8em 0;
+  border-bottom: 2px solid #9c031f;
+}
+
+.archiveHeader h1 {
+  font-family: "Suez One", serif;
+  font-size: 2em;
+  font-weight: normal;
+  margin: 0;
+  color: #e37e30;
+}
+
+.archiveNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.archiveButton {
+  display: inline-block;
+  padding: 0.35em 0.8em;
+  background-color: rgb(97, 69, 17);
+  border: 2px solid rgb(189, 136, 58);
+  border-radius: 0.2em;
+  color: #f2a91d;
+  font-size: 0.9em;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.archiveButton:hover {
+  background-color: rgb(140, 100, 25);
+  color: #fff3d6;
+}
+
+.archiveIntro {
+  max-width: 1200px;
+  margin: 0.8em auto;
+  line-height: 1.4;
+  color: #e9b87a;
+}
+
+.archivePanel {
+  background-color: #631042;
+  border: 2px solid rgb(107, 20, 71);
+  border-radius: 10px;
+}
+
+.tileLink {
+  display: inline-block;
+  margin: 0 0.15em;
+  padding: 0 0.3em;
+  font-family: "Roboto Mono", monospace;
+  font-weight: bold;
+  color: rgb(140, 210, 60);
+  border: 1px solid rgba(140, 210, 60, 0.5);
+  border-radius: 0.2em;
+  cursor: pointer;
+  background: none;
+  font-size: 0.9em;
+}
+
+.tileLink:hover {
+  background-color: rgba(140, 210, 60, 0.15);
+}
+
+.spoilerBlock {
+  cursor: pointer;
+  padding: 0.3em 0.6em;
+  border-radius: 0.2em;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 0.35) 8px,
+    rgba(0, 0, 0, 0.15) 8px,
+    rgba(0, 0, 0, 0.15) 16px
+  );
+  color: #fff3d6;
+  user-select: none;
+}
+
+.spoilerBlock.revealed {
+  cursor: default;
+  background-image: none;
+  background-color: rgba(0, 0, 0, 0.2);
+  user-select: text;
+}
+
+.revealToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.factionTag {
+  display: inline-block;
+  padding: 0 0.4em;
+  border-radius: 0.2em;
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.factionTag.pyre {
+  background-color: rgb(150, 45, 15);
+  color: #ffd9a8;
+}
+
+.factionTag.bastion {
+  background-color: rgb(25, 65, 120);
+  color: #cfe6ff;
+}
+
+@media only screen and (max-width: 840px) {
+  .archivePage {
+    font-size: 15px;
+  }
+
+  .archiveHeader h1 {
+    font-size: 1.5em;
+  }
+}

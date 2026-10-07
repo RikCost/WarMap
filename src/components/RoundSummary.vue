@@ -7,7 +7,7 @@
       <table>
         <tr class="entry" v-for="f in shownFighters" :key="f.id">
           <td class="fighterName">
-            {{ f.name }}
+            <FighterLink :fighterId="f.id" />
           </td>
           <td class="TileLocation">
             <div class="warpLink" @click="selectTile(f.tile)">
@@ -29,6 +29,7 @@
 
 <script>
 import StrikeLink from "./elements/StrikeLink.vue"
+import FighterLink from "./elements/FighterLink.vue"
 
 import { mapGetters } from "vuex"
 import { ALL_FIGHTERS_IN_ROUND, CURRENT_ROUND } from "../state/getters"
@@ -39,7 +40,8 @@ export default {
     return {}
   },
   components: {
-    StrikeLink
+    StrikeLink,
+    FighterLink
   },
   beforeMount: function() {
     this.fighters = this.allFighters(this.isBastion)

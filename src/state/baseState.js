@@ -2,6 +2,7 @@ import allRounds from "../assets/data/rounds/allRounds"
 import mapMeta from "../assets/data/map-meta.json"
 import zoneInfo from "../assets/data/zones/zone-info.json"
 import allBackstories from "../assets/data/backstories.json"
+import allItems from "../assets/data/items.json"
 import fighters from "./fighter-loader"
 
 const defaultState = {
@@ -15,6 +16,7 @@ const defaultState = {
   localStorageAvailable: null,
   readingList: {},
   backstories: allBackstories,
+  items: allItems,
   showGraphics: true,
   showItems: true,
   showLabels: true,
