@@ -100,7 +100,7 @@
     "owner": "bastion",
     "grandBattle": false,
     "clash": false,
-    "items": [],
+    "items": [4],
     "fighters": {
       "pyre": [241],
       "bastion": [650]
